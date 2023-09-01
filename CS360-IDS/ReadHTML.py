@@ -2,7 +2,6 @@
 #Liam Zalubas
 
 #Project Part 1: take in HTML file and dump it in the console
-#submit as .ipynb
 
 #file = open("Python/CS360-IDS/ClassWebsite.html")
 #print(file.read())
