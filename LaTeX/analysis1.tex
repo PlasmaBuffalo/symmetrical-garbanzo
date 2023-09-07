@@ -1,0 +1,126 @@
+\documentclass{article}  % determines the type of document we're creating.
+
+\usepackage{amsmath , amssymb , amsthm}
+
+\newcommand{\ds}{\displaystyle}
+\newcommand{\e}{\varepsilon}
+
+%  The percent sign is the character used for making comments.
+% Everything after the percent sign on a single line will be ignored by the LaTeX software.
+
+% Everything above is preamble.  Loading packages into the software and assigning new commands.
+
+% This entire document is a program that runs in LaTeX to create a nice typeset document (typically a .pdf).  
+
+
+\begin{document}  
+% Everything between this command and the \end{document} command below is contained in the document environment.  Within this environment
+% we can also enter environments like enumerate and itemize below.  
+
+
+\pagestyle{empty}
+\centerline{\Large LaTeX Example}
+
+\bigskip
+
+Welcome to \LaTeX (pronounced ``Lay-Tech''), the most popular mathematical typesetting language in the world.                         This PDF document \texttt{latexsample2.pdf} was created by running \LaTeX{} on a program contained in the file \texttt{latexsample2.tex}, whichF
+was written with                                  the purpose of creating this document.  
+This document contains a few random examples that might help you when                                       typing.  
+The most important character is \verb#\#, typically located on the upper right of your keyboard.  Every \LaTeX{} command starts with this character.  I made this backslash by typing \verb^\verb#\#^ to use the ``verbatim mode''.  
+ I could have also used \verb#\textbackslash# to make \textbackslash.  
+ Notice the nice shape of my quotation marks in the  sentences above as opposed to this "quote" where I wrongly used the double quotation character.
+
+% Notice the extra space above.  Doesn't make a difference in the document.  
+% LaTeX takes care of spacing for you.  Also, you only get a new paragraph if you  have an empty line between paragraphs here.
+
+
+
+Notice also that many commands take inputs, which go between the curly brace grouping symbols \{ and \}.  There are many  resources for learning about \LaTeX, including Google.
+
+\section{Lists}
+
+\begin{enumerate}  % enumerate is an environment.  So is itemize below.
+\item This is a list.
+
+%Notice how none of this space matters.
+
+
+
+\item Here is the second item.
+\end{enumerate}
+
+There are other ways of making lists.
+
+\begin{itemize}
+\item Sometimes you'd like a list \dots
+\item \dots without numbers.
+\end{itemize}
+
+\section{Math}
+
+The first rule (see the next document) is that all mathematics must be put in a mathematical environment.  
+
+Inline mathematical symbols like $e$ or $\pi$ are always enclosed within dollar signs \$.
+
+I like this integral: $ \int_0^1 \frac{dx}{\sqrt x}.$
+
+If you wanted to center that text, you could put it in the \texttt{center} environment:
+
+\begin{center}
+$\sum_{n = 1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}.$
+\end{center}
+
+You can let the math be larger with $\backslash$\texttt{displaystyle}:
+
+
+$\displaystyle \hbox{Area}\left( \bigcup_{n = 1}^{\infty} \frac{1}{n}\times \frac{1}{n}\hbox{ square}\right) = \frac{\pi^2}{6},$
+or you could do both by using, instead of the inline \$ \dots \$ environment, the display math environment with $\backslash[$ and $\backslash]$:
+
+\[
+\sum_{i=1}^n i^2 = \frac{n(n+1)(2n+1)}{6}.
+\]
+
+Or we could use the \texttt{equation} environment to make a numbered equation:
+
+\begin{equation}
+ \int_0^1 \frac{dx}{\sqrt x}.
+\end{equation}
+
+Wait -- is that  an equation?
+
+The \texttt{array} environment is great for people who love matrices, such as
+\[
+M=\left(
+\begin{array}{ccc}
+1 & 2&3 \\
+4&5&6 \\
+7&8&9
+\end{array}
+\right)
+\]
+
+\section{Spacing}
+One can skip space vertically or horizontally with \texttt{$\backslash$bigskip, $\backslash$medskip, $\backslash$smallskip}
+or $\backslash$vspace\{1.3in\} and $\backslash$hspace\{0.2cm\}.  Remove paragraph indentations with $\backslash$noindent.  Another useful horizontal spacer is \textbackslash qquad.
+
+\vspace{0.3in}
+
+\noindent
+Look, I made a $0.3$ inch space!  In math mode, we can use spacers like \textbackslash , to make $\ds \int f(x) dx$ look better: $\ds \int f(x)\; dx$
+
+\section{More Symbols}
+
+Some useful logical symbols include $\forall$,  $\exists$, $\in$,  $\ni$, $\subseteq$, and $\supseteq$.
+
+Convergent sequences look like this:
+
+\[
+\lim_{n \to \infty} a_n = L.
+\]
+
+There are several funky symbols you might want - they are included in the AMS Symbol package.  (You need to put  \verb#\usepackage{amssymb}# in the preamble.)
+
+${\mathbb R}$ %\hspace{0.3in}
+\qquad ${\mathbb Q}$ \qquad $\square$ \qquad$\blacksquare$ \qquad $\e$ \qquad $\emptyset$ \qquad $\mathcal P$ \qquad $\mathcal N$
+
+\end{document}
