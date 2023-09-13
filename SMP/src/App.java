@@ -1,5 +1,9 @@
 package SMP.src;
 
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+
 public class App {
     public static void main(String[] args){
         //main loop: starts up running loop and provides user options
@@ -20,9 +24,24 @@ public class App {
         This tool is focused on helping students with long-term class planning, up to 4 years.
         CORE curriculum should be accounted for
 
-        A priority system should be available to the student to adjust when classes are taken
+        A priority system may be available to the student to adjust when classes are taken
          - For example, a student should be able to prioritize completion of their language credit
-         
+
+        consistency of timing for alternating classes, such as AF/AS classes
+        web scraping should be done rarely, not every run
+        use python to web scrape
+        stage 1 is web scraping
+         - need to figure out intermediate file format, will do based on web scraping
+         - maybe some type of object containing course name/code, timing, requisites
+        stage 2 is calendar/schedule formatting
+         - major object:
+           - set of required classes
+           - set of higher level/electives
+           - option of capstone/SMP
+         - non-CS classes may be a difficulty
+         - consider using multiple tags, such as required, optional, cosc, math, 100, 300, capstone, etc.
+         - maybe JSON
+
 
          */
     }
