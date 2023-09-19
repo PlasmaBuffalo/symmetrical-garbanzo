@@ -4,6 +4,7 @@
 # this is the page containing all smcm majors and minors
 base_url = "https://www.smcm.edu/academics/majors-minors-concentrations/"
 
+#http://catalog.smcm.edu/
 #this link is specifically a hardcoded link to the CS Major requirements page
 specific = "https://www.smcm.edu/mathcs/academic-offerings/what-you-learn-cs/requirements/#option1"
 
