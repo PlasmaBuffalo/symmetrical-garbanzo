@@ -25,7 +25,7 @@ for link in soup_page.find_all('a'):
             links.append(link)
 
 for item in links:
-    print(item)
+    print(item.text)
 
 """
 print(soup_page.find_all(class_="entry catalog"))
