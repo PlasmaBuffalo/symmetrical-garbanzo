@@ -1,5 +1,5 @@
 #Schedule maker web scraper version 1: hardcoded to the right website
-# needs to create a JSON with all classes required for the major provided
+# needs to create a JSON or something with all classes required for the major provided
 
 
 from bs4 import BeautifulSoup as bs
@@ -17,6 +17,7 @@ text = response.content
 tags = ["Major", "Minor", "BA", "BS"]
 links = []
 
+#if the
 soup_page = bs(text, "html.parser")
 for link in soup_page.find_all('a'):
     for kwd in tags:
