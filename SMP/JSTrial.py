@@ -52,5 +52,9 @@ for item in clickables:
     #focus the driver on the item
     print(item.text)
  """
+# this clicks on the first required class
 driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[2]/div[2]/ul[1]/li[1]/span[1]/a[1]").click()
+# this clicks on the second required class
+driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[2]/div[2]/ul[1]/li[2]/span[1]/a[1]").click()
+
 time.sleep(2)
