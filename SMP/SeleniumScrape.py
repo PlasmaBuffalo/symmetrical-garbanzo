@@ -41,21 +41,23 @@ driver.find_element(By.LINK_TEXT, "Computer Science, BS").click()
 time.sleep(2)
 
 # now on the page needed to gather all info after many clicks
-#once I click on the thing, I have access to the information I need to store
+# once I click on the class name link, I then have access to the information I need to store
 
-# for each rel. css selector such that [aria-expanded='false'], click on the link
-
+# these selectors DO NOT WORK to open the class link expandable
 # driver.find_element(By.CSS_SELECTOR, "*[aria-expanded='false']").click()
+# driver.find_element(By.XPATH, "a[href='#/usr/local/webroot/acalog-legacy/shared/htdocs_gateway/ajax/preview_course.php']")
+
+# this prints out the name of every class we see
 """
 clickables = driver.find_elements(*(By.CSS_SELECTOR, "*[aria-expanded='false']"))
-
 for item in clickables:
     #focus the driver on the item
     print(item.text)
  """
-# this clicks on the first required class
-driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[2]/div[2]/ul[1]/li[1]/span[1]/a[1]").click()
-# this clicks on the second required class
-driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[2]/div[2]/ul[1]/li[2]/span[1]/a[1]").click()
 
-time.sleep(5)
+# this clicks on the first required class
+# driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[2]/div[2]/ul[1]/li[1]/span[1]/a[1]").click()
+# this clicks on the second required class
+# driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[2]/div[2]/ul[1]/li[2]/span[1]/a[1]").click()
+
+time.sleep(10)
