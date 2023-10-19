@@ -17,13 +17,15 @@ text = response.content
 tags = ["Major", "Minor", "BA", "BS"]
 links = []
 
-#if the
+#if the uhhhhh
 soup_page = bs(text, "html.parser")
 for link in soup_page.find_all('a'):
     for kwd in tags:
         if link.text.find(kwd) != -1:
             links.append(link)
 
+# yeah it finds all text which is linked and contains a tag and then prints them here
+# i should turn these into buttons
 for item in links:
     print(item.text)
 
