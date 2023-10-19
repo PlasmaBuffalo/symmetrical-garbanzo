@@ -39,17 +39,17 @@ if (not os.path.exists("SMP/page.html") or force_scrape == 1):
     # just for debugging
     # driver.maximize_window()
 
-    time.sleep(2)
+    time.sleep(1)
 
     # this is the explicit/absolute xpath to the 'programs' button to get to the page with all majors and minors
     driver.find_element(By.XPATH, "/html[1]/body[1]/table[1]/tbody[1]/tr[3]/td[2]/table[1]/tbody[1]/tr[2]/td[2]/table[1]/tbody[1]/tr[1]/td[1]/p[1]/a[2]/img[1]").click()
 
-    time.sleep(2)
+    time.sleep(1)
 
     # now click on the 'computer science BS' link to go to the major page
     driver.find_element(By.LINK_TEXT, "Computer Science, BS").click()
 
-    time.sleep(2)
+    time.sleep(1)
 
     # now we're on the page needed to gather all course info after many clicks
     # now we need to click on each course's dropdown to reveal all the information we need to scrape and store
@@ -90,7 +90,22 @@ page_as_soup = bs(page_as_str, "html.parser")
 # pattern matches:
 # class="program_description"
 # class="acalog-core"
-for item in page_as_soup.find_all("div", "acalog-core"):
-    print(item.text)
+garbage = "Add to Saved Course (opens a new window) Add to My Favorites (opens a new window) Share this Page Facebook this Page (opens a new window) Tweet this Page (opens a new window) Print (opens a new window)"
 
+# writes all the class data neatly into a text file
+with open("SMP/classText.html", "w", encoding="utf-8") as f:
+    for item in page_as_soup.find_all("li", "acalog-course"):
+        bigString:str = ''
+        textBlocks: list[str] = item.get_text(strip=True, separator=' ').splitlines()
+        for block in textBlocks:
+            print(block + "\n\n")
+            bigString += ' ' + block
+        bigString = bigString.replace("\t","").replace(garbage,"")
+        f.write(bigString + "\n")
+    f.write("\n\n\n")
+
+
+        # f.write(item.text.strip().replace("\t",""))
+        # f.write("\n\n\n")
+# textBlocks = thisArticle.article.get_text(strip=True, separator='\n').splitlines()
 # write needed data into a CSV file in this same folder containing organized relevant course data
