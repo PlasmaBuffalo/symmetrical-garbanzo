@@ -8,15 +8,15 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-force_scrape = 0
+force_scrape = True
 
 # if page.html does not exist or force_scrape == 1, then this method will scrape new data
-if (not os.path.exists("SMP/page.html") or force_scrape == 1):
+if (not os.path.exists("SMP/page.html") or force_scrape):
 
     # start by defining the options
     options = webdriver.ChromeOptions()
 
-    # we run this headless normally, but this is commented out for debugging purposes
+    # we run this headless normally, but this is available for debugging purposes
     options.add_argument('--headless')
 
     # certificate errors should be resolved now, leaving here just in case
@@ -90,7 +90,7 @@ page_as_soup = bs(page_as_str, "html.parser")
 # pattern matches:
 # class="program_description"
 # class="acalog-core"
-garbage = "Add to Saved Course (opens a new window) Add to My Favorites (opens a new window) Share this Page Facebook this Page (opens a new window) Tweet this Page (opens a new window) Print (opens a new window)"
+
 
 # writes all the class data neatly into a text file
 with open("SMP/classText.html", "w", encoding="utf-8") as f:
@@ -98,9 +98,14 @@ with open("SMP/classText.html", "w", encoding="utf-8") as f:
         bigString:str = ''
         textBlocks: list[str] = item.get_text(strip=True, separator=' ').splitlines()
         for block in textBlocks:
-            print(block + "\n\n")
-            bigString += ' ' + block
-        bigString = bigString.replace("\t","").replace(garbage,"")
+            course_code = block[0:8]
+            second_code = block.find(course_code, 8)
+            block = block[second_code:]
+            bigString += '\n' + block
+
+        bigString = bigString.replace("\t","")
+
+        # then we find the index of the second course code and replace text from index zero to second course code. This removes stupid share links.
         f.write(bigString + "\n")
     f.write("\n\n\n")
 
