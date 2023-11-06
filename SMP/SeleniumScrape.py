@@ -12,7 +12,7 @@ force_scrape = True
 
 # if page.html does not exist or force_scrape == 1, then this method will scrape new data
 if (not os.path.exists("SMP/page.html") or force_scrape):
-
+    print("Gathering course data")
     # start by defining the options
     options = webdriver.ChromeOptions()
 
@@ -74,7 +74,7 @@ if (not os.path.exists("SMP/page.html") or force_scrape):
     with open("SMP/page.html", "w", encoding="utf-8") as f:
         f.write(html)
 # end web scrape method
-
+print("Course data gathering complete")
 # now we switch over to BeautifulSoup to parse our webpage which contains the info we need
 
 # open the file and create a BS4 object with it
@@ -92,25 +92,31 @@ page_as_soup = bs(page_as_str, "html.parser")
 # class="acalog-core"
 
 
-# writes all the class data neatly into a text file
-with open("SMP/classText.html", "w", encoding="utf-8") as f:
+# method function: takes the webpage html ("page.html")
+# and outputs class listings into a text file ("classText.html")
+with open("SMP/classText.txt", "w", encoding="utf-8") as f:
+    # for each list item which fits the description of a course item
     for item in page_as_soup.find_all("li", "acalog-course"):
         bigString:str = ''
         textBlocks: list[str] = item.get_text(strip=True, separator=' ').splitlines()
+
+        # here, we take tne entire course line and remove the share button interactions
         for block in textBlocks:
+            # step 1: take the course code matching (ABCD_123)
             course_code = block[0:8]
+            # step 2: find the second occurrence of the course code
             second_code = block.find(course_code, 8)
+            # step 3: remove all redundant text before the second course code
             block = block[second_code:]
+            # step 4: add the course info to the class list
             bigString += '\n' + block
 
+        # finally, we remove all unnecessary tabs
         bigString = bigString.replace("\t","")
 
-        # then we find the index of the second course code and replace text from index zero to second course code. This removes stupid share links.
+        # make a space between each course listing for readability
         f.write(bigString + "\n")
-    f.write("\n\n\n")
+    f.close()
 
-
-        # f.write(item.text.strip().replace("\t",""))
-        # f.write("\n\n\n")
-# textBlocks = thisArticle.article.get_text(strip=True, separator='\n').splitlines()
-# write needed data into a CSV file in this same folder containing organized relevant course data
+# next step: organizing the classText.txt
+# idea: remove redundant course codes before finishing classText.txt file. Example: MATH151 repeated
