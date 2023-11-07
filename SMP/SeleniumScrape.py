@@ -91,6 +91,8 @@ page_as_soup = bs(page_as_str, "html.parser")
 # class="program_description"
 # class="acalog-core"
 
+# this will keep track of the course codes we have already written
+code_list = []
 
 # method function: takes the webpage html ("page.html")
 # and outputs class listings into a text file ("classText.html")
@@ -102,7 +104,8 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
 
         # here, we take tne entire course line and remove the share button interactions
         for block in textBlocks:
-            # step 1: take the course code matching (ABCD_123)
+            # TODO: add tracking of added courses using code_list
+            # step 1: take the course code matching (ABCD 123)
             course_code = block[0:8]
             # step 2: find the second occurrence of the course code
             second_code = block.find(course_code, 8)
