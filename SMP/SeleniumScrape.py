@@ -107,6 +107,8 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
             # TODO: add tracking of added courses using code_list
             # step 1: take the course code matching (ABCD 123)
             course_code = block[0:8]
+            # step 1.5: add the course code to the list of already added courses
+            code_list.append(course_code)
             # step 2: find the second occurrence of the course code
             second_code = block.find(course_code, 8)
             # step 3: remove all redundant text before the second course code
@@ -123,3 +125,5 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
 
 # next step: organizing the classText.txt
 # idea: remove redundant course codes before finishing classText.txt file. Example: MATH151 repeated
+# could sort list and remove duplicates
+# use image from Simon OH
