@@ -193,3 +193,5 @@ print(course_list)
 # consider major as a graph of is prerequisites, which have prerequisites up to the point of classes with no prerequisites
 
 # create visualization of planning, with major at the end and prerequisites trailing backwards towards beginning of four-year
+
+# PERT Charts, wikipedia (polaris engineering research somethingorother, used for planning)
