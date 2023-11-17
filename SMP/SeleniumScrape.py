@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-force_scrape = True
+force_scrape = False
 
 # if page.html does not exist or force_scrape == 1, then this method will scrape new data
 if (not os.path.exists("SMP/page.html") or force_scrape):
@@ -75,6 +75,7 @@ if (not os.path.exists("SMP/page.html") or force_scrape):
         f.write(html)
 # end web scrape method
 print("Course data gathering complete")
+
 # now we switch over to BeautifulSoup to parse our webpage which contains the info we need
 
 # open the file and create a BS4 object with it
@@ -130,10 +131,57 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
         bigString = bigString.replace("\t","")
 
         # make a space between each course listing for readability
-        f.write(bigString + "\n")
+        f.write(bigString)
     f.close()
 
-# next step: organizing the classText.txt
-# idea: remove redundant course codes before finishing classText.txt file. Example: MATH151 repeated
-# could sort list and remove duplicates
-# use image from Simon OH
+# next step: create a dict per line organizing course information
+
+# start with proof of concept for our first class
+
+course_list = []
+
+# for each line in classText.txt, check if line is valid and create a dict for it
+
+for line in open("SMP/classText.txt", "r", encoding="utf-8"):
+    # if the line is valid (contains a course code)
+    if (line[0:8] in code_list):
+        # create a dict for the course
+        course_dict = {}
+
+        # add the course code to the dict, first 8 characters
+        course_dict["code"] = line[0:8]
+
+        # add the course name to the dict, from end of code to "Credit"
+        course_dict["name"] = line[9:line.find("Credit") - 1]
+
+        # add the course credits to the dict, from beginning of "Credit" to "Frequency"
+        course_dict["credit_hours"] = line[line.find("Credit"):line.find("Frequency")]
+
+        # add the course frequency to the dict, from beginning of "Frequency" to end of "semester"
+        course_dict["frequency"] = line[line.find("Frequency") + 11:line.find("semester")+8]
+
+        # using this to bound the course description
+        desc_end = -1
+
+        # if course satisfies exists, course description ends at "Course Satisfies"
+        if line.find("Course Satisfies") != -1:
+            # putting bounds on the description
+            desc_end = line.find("Course Satisfies")
+            course_dict["satisfies"] = line[line.find("Course Satisfies"):line.find(".",desc_end)]
+
+        # if prerequisites exist, course description ends at "Course Satisfies"
+        if line.find("Prerequisite(s):") != -1:
+            # check bounds on description again.
+            if desc_end != -1:
+                desc_end = line.find("Prerequisite(s):")
+
+            # then add the prerequisites to the dict
+            course_dict["prerequisites"] = line[line.find("Prerequisite(s):")+17:line.find("Prerequisite(s):")]
+
+        #add the course description to the dict
+        course_dict["description"] = line[line.find("semester")+9:desc_end]
+
+        # add the course dict to the course list
+        course_list.append(course_dict)
+
+print(course_list[0])
