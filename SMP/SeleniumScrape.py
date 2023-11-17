@@ -90,31 +90,41 @@ page_as_soup = bs(page_as_str, "html.parser")
 # pattern matches:
 # class="program_description"
 # class="acalog-core"
+# <table class="td_dark">
+# NOT <div class="gateway-toolbar gateway-mini-toolbar clearfix">
 
 # this will keep track of the course codes we have already written
 code_list = []
+
+# function to filter out gateway-toolbar class
+# def not_gateway_elements(tag):
+#     return tag.has_attr('class') and not tag.has_attr('id')
 
 # method function: takes the webpage html ("page.html")
 # and outputs class listings into a text file ("classText.html")
 with open("SMP/classText.txt", "w", encoding="utf-8") as f:
     # for each list item which fits the description of a course item
+
     for item in page_as_soup.find_all("li", "acalog-course"):
         bigString:str = ''
         textBlocks: list[str] = item.get_text(strip=True, separator=' ').splitlines()
 
         # here, we take tne entire course line and remove the share button interactions
         for block in textBlocks:
-            # TODO: add tracking of added courses using code_list
             # step 1: take the course code matching (ABCD 123)
             course_code = block[0:8]
-            # step 1.5: add the course code to the list of already added courses
-            code_list.append(course_code)
-            # step 2: find the second occurrence of the course code
-            second_code = block.find(course_code, 8)
-            # step 3: remove all redundant text before the second course code
-            block = block[second_code:]
-            # step 4: add the course info to the class list
-            bigString += '\n' + block
+            # check if the course has already been read in
+            # if this is a new course
+            if (course_code not in code_list):
+                # step 1.5: add the course code to the list of already added courses
+                code_list.append(course_code)
+                # step 2: find the second occurrence of the course code
+                second_code = block.find(course_code, 8)
+                # step 3: remove all redundant text before the second course code
+                block = block[second_code:]
+                # step 4: add the course info to the class list
+                bigString += '\n' + block
+            # this marks where already added courses get discarded.
 
         # finally, we remove all unnecessary tabs
         bigString = bigString.replace("\t","")
