@@ -184,4 +184,12 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
         # add the course dict to the course list
         course_list.append(course_dict)
 
-print(course_list[0])
+print(course_list)
+
+# consider dict of dicts rather than list of dicts, easier to query
+
+# need to connect major with each of its required classes
+
+# consider major as a graph of is prerequisites, which have prerequisites up to the point of classes with no prerequisites
+
+# create visualization of planning, with major at the end and prerequisites trailing backwards towards beginning of four-year
