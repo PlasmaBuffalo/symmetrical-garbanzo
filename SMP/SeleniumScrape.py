@@ -158,7 +158,7 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
         course_dict["credit_hours"] = line[line.find("Credit"):line.find("Frequency")]
 
         # add the course frequency to the dict, from beginning of "Frequency" to end of "semester"
-        course_dict["frequency"] = line[line.find("Frequency") + 11:line.find("semester")+8]
+        course_dict["frequency"] = line[line.find("Frequency"):line.find("semester")+8]
 
         # using this to bound the course description
         desc_end = -1
@@ -168,30 +168,34 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
             # putting bounds on the description
             desc_end = line.find("Course Satisfies")
             course_dict["satisfies"] = line[line.find("Course Satisfies"):line.find(".",desc_end)]
+        # null otherwise
+        # else:
+        #     course_dict["satisfies"] = ""
 
         # if prerequisites exist, course description ends at "Course Satisfies"
         if line.find("Prerequisite(s):") != -1:
             # check bounds on description again.
+            # since this comes after satisfiers, check if desc_end has been altered
             if desc_end != -1:
                 desc_end = line.find("Prerequisite(s):")
 
             # then add the prerequisites to the dict
-            course_dict["prerequisites"] = line[line.find("Prerequisite(s):")+17:line.find("Prerequisite(s):")]
+            course_dict["prerequisites"] = line[line.find("Prerequisite(s):")+17:]
 
-        #add the course description to the dict
-        course_dict["description"] = line[line.find("semester")+9:desc_end]
+        #add the course description to the dict according to the conditional limits set above
+        if desc_end == -1:
+            course_dict["description"] = line[line.find("semester")+9:]
+        else:
+            course_dict["description"] = line[line.find("semester")+9:desc_end]
 
         # add the course dict to the course list
         course_list.append(course_dict)
 
-print(course_list)
+print(course_list[1])
 
 # consider dict of dicts rather than list of dicts, easier to query
 
 # need to connect major with each of its required classes
-
 # consider major as a graph of is prerequisites, which have prerequisites up to the point of classes with no prerequisites
-
 # create visualization of planning, with major at the end and prerequisites trailing backwards towards beginning of four-year
-
-# PERT Charts, wikipedia (polaris engineering research somethingorother, used for planning)
+# PERT Charts, wikipedia (program engineering and review technique)
