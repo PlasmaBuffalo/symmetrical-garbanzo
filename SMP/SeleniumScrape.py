@@ -191,7 +191,48 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
         # add the course dict to the course list
         course_list.append(course_dict)
 
-print(course_list[1])
+# print(course_list[1])
+# next, I want to sort out the data on the course list so I can use it later
+# alternatively, I can create some tiny functions to get what I'm looking for
+# for example, I could create a when_offered() function which sorts out the text for me
+
+# here is a schedule class which we'll use to store the course schedule
+# each schedule will assume a 4-year plan, with 8 semesters
+# each class added to a schedule will have an associated year and semester/season
+
+class Schedule:
+
+    # constructor
+    def __init__(self, year, semester):
+        self.year = year
+        self.semester = semester
+
+    # method to add a course to a year and semester
+    def add_course(self, course, year, semester):
+        # add the course to the schedule
+        course_list.append(course)
+
+    # method to remove a course from the schedule
+    def remove_course(self, course):
+        # remove the course from the schedule
+        course_list.remove(course)
+
+    # method to get all courses in a given year and semester
+    def get_semester_courses(self, year, semester):
+        # create a list to store the courses
+        semester_courses = []
+
+        # for each course in the course list
+        for course in course_list:
+            # if the course is in the given semester
+            if course["year"] == year and course["semester"] == semester:
+                # add the course to the semester courses list
+                semester_courses.append(course)
+
+        # return the list of courses
+        return semester_courses
+
+
 
 # consider dict of dicts rather than list of dicts, easier to query
 
