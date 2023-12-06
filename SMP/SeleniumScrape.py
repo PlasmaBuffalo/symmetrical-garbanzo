@@ -240,3 +240,5 @@ class Schedule:
 # consider major as a graph of is prerequisites, which have prerequisites up to the point of classes with no prerequisites
 # create visualization of planning, with major at the end and prerequisites trailing backwards towards beginning of four-year
 # PERT Charts, wikipedia (program engineering and review technique)
+
+# in order to continue, I need to add a variable to each course object to know if a course is required, elective, or final
