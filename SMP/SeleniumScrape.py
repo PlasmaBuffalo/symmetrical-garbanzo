@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-force_scrape = False
+force_scrape = True
 
 # if page.html does not exist or force_scrape == 1, then this method will scrape new data
 if (not os.path.exists("SMP/page.html") or force_scrape):
@@ -54,11 +54,15 @@ if (not os.path.exists("SMP/page.html") or force_scrape):
     # now we're on the page needed to gather all course info after many clicks
     # now we need to click on each course's dropdown to reveal all the information we need to scrape and store
 
+    # TODO here is where we need to take all the required classes and then reroute to the class masterlist for standardized formatting
+
     # get all links with the aria-expanded attribute set to false
     links = driver.find_elements(By.CSS_SELECTOR, "[aria-expanded='false']")
 
+
     # iterate over the links and click on them if they are visible
     for link in links:
+        print(link)
         time.sleep(0.1)
         if link.is_displayed():
             link.click()
