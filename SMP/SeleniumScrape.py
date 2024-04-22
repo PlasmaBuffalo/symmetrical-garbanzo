@@ -78,7 +78,10 @@ if (not os.path.exists("SMP/page.html") or force_scrape):
     with open("SMP/page.html", "w", encoding="utf-8") as f:
         f.write(html)
 # end web scrape method
+
+
 print("Course data gathering complete")
+
 
 # now we switch over to BeautifulSoup to parse our webpage which contains the info we need
 
@@ -112,9 +115,14 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
 
     for item in page_as_soup.find_all("li", "acalog-course"):
         bigString:str = ''
+        # check inside the item's first <a> tag to see if the href either contains the number 657 or 658 and print the result
+        if item.find("a")["href"].find("657") != -1:
+            print("657")
+        elif item.find("a")["href"].find("658") != -1:
+            print("658")
         textBlocks: list[str] = item.get_text(strip=True, separator=' ').splitlines()
 
-        # here, we take tne entire course line and remove the share button interactions
+        # here, we take the entire course line and remove the share button interactions
         for block in textBlocks:
             # step 1: take the course code matching (ABCD 123)
             course_code = block[0:8]
@@ -127,20 +135,21 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
                 second_code = block.find(course_code, 8)
                 # step 3: remove all redundant text before the second course code
                 block = block[second_code:]
-                # step 4: add the course info to the class list
+                # step 4: add the course info to the class list (with a newline character at the end for formatting)
                 bigString += '\n' + block
+                # get whether the course is required or elective based on the html of the section h3
+                # header_id = item.find_previous("div").find("h3")["name"]
+
             # this marks where already added courses get discarded.
 
         # finally, we remove all unnecessary tabs
         bigString = bigString.replace("\t","")
 
-        # make a space between each course listing for readability
+        # and we then write the big string to the file
         f.write(bigString)
     f.close()
 
 # next step: create a dict per line organizing course information
-
-# start with proof of concept for our first class
 
 course_list = []
 
