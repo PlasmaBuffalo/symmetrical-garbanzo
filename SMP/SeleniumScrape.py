@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-force_scrape = True
+force_scrape = False
 
 # if page.html does not exist or force_scrape == 1, then this method will scrape new data
 if (not os.path.exists("SMP/page.html") or force_scrape):
@@ -147,102 +147,66 @@ course_list = []
 # for each line in classText.txt, check if line is valid and create a dict for it
 
 for line in open("SMP/classText.txt", "r", encoding="utf-8"):
-    # if the line is valid (contains a course code)
+    # if the line is valid (contains a course code) which we have accounted for
     if (line[0:8] in code_list):
         # create a dict for the course
         course_dict = {}
 
         # add the course code to the dict, first 8 characters
         course_dict["code"] = line[0:8]
+        # then remove the course code from the line
+        line = line[8:]
 
         # add the course name to the dict, from end of code to "Credit"
-        course_dict["name"] = line[9:line.find("Credit") - 1]
+        course_dict["name"] = line[:line.find("Credit") - 1]
+        # then remove the course name from the line
+        line = line[line.find("Credit") - 1:]
 
         # add the course credits to the dict, from beginning of "Credit" to "Frequency"
         course_dict["credit_hours"] = line[line.find("Credit"):line.find("Frequency")]
+        # then remove the course credits from the line
+        line = line[line.find("Frequency"):]
 
         # add the course frequency to the dict, from beginning of "Frequency" to end of "semester"
         course_dict["frequency"] = line[line.find("Frequency"):line.find("semester")+8]
+        # then remove the course frequency from the line
+        line = line[line.find(":"):]
 
-        # using this to bound the course description
-        desc_end = -1
-
-        # if course satisfies exists, course description ends at "Course Satisfies"
+        # if the course satisfies a requirement, we'll add that to the dict
         if line.find("Course Satisfies") != -1:
-            # putting bounds on the description
-            desc_end = line.find("Course Satisfies")
-            course_dict["satisfies"] = line[line.find("Course Satisfies"):line.find(".",desc_end)]
+            course_dict["satisfies"] = line[line.find("Course Satisfies")+17:line.find(".")]
         # null otherwise
-        # else:
-        #     course_dict["satisfies"] = ""
-
-        # if prerequisites exist, course description ends at "Course Satisfies"
-        if line.find("Prerequisite(s):") != -1:
-            # check bounds on description again.
-            # since this comes after satisfiers, check if desc_end has been altered
-            if desc_end != -1:
-                desc_end = line.find("Prerequisite(s):")
-
-            # then add the prerequisites to the dict
-            course_dict["prerequisites"] = line[line.find("Prerequisite(s):")+17:]
-
-        #add the course description to the dict according to the conditional limits set above
-        if desc_end == -1:
-            course_dict["description"] = line[line.find("semester")+9:]
         else:
-            course_dict["description"] = line[line.find("semester")+9:desc_end]
+            course_dict["satisfies"] = ""
+        # then remove the satisfies from the line
+        line = line[line.find(".")+1:]
 
+        # if prerequisites exist, we'll add that to the dict
+        if line.find("Prerequisite(s):") != -1:
+            prereq_start = line.find("Prerequisite(s):")
+            # then we find the end of the prereqs by looking for the next period
+            prereq_end = line.find(".", prereq_start)
+            # then we add the prereqs to the dict after some filtering
+            course_dict["prerequisites"] = line[prereq_start:prereq_end].replace("Prerequisite(s):", "").replace("or permission of the instructor", "")
+            # then remove the prereqs from the line
+            line = line[:prereq_start]
+            # null otherwise
+        else:
+            course_dict["prerequisites"] = ""
+        # then remove the prereqs from the line
+
+        # add the course description to the dict; it should be the only thing left
+        course_dict["description"] = line
         # add the course dict to the course list
         course_list.append(course_dict)
 
-# print(course_list[1])
-# next, I want to sort out the data on the course list so I can use it later
-# alternatively, I can create some tiny functions to get what I'm looking for
-# for example, I could create a when_offered() function which sorts out the text for me
+# print the course list to the console
+for course in course_list:
+    print(course)
+    print("\n")
 
-# here is a schedule class which we'll use to store the course schedule
-# each schedule will assume a 4-year plan, with 8 semesters
-# each class added to a schedule will have an associated year and semester/season
-
-class Schedule:
-
-    # constructor
-    def __init__(self, year, semester):
-        self.year = year
-        self.semester = semester
-
-    # method to add a course to a year and semester
-    def add_course(self, course, year, semester):
-        # add the course to the schedule
-        course_list.append(course)
-
-    # method to remove a course from the schedule
-    def remove_course(self, course):
-        # remove the course from the schedule
-        course_list.remove(course)
-
-    # method to get all courses in a given year and semester
-    def get_semester_courses(self, year, semester):
-        # create a list to store the courses
-        semester_courses = []
-
-        # for each course in the course list
-        for course in course_list:
-            # if the course is in the given semester
-            if course["year"] == year and course["semester"] == semester:
-                # add the course to the semester courses list
-                semester_courses.append(course)
-
-        # return the list of courses
-        return semester_courses
-
-
-
-# consider dict of dicts rather than list of dicts, easier to query
-
-# need to connect major with each of its required classes
-# consider major as a graph of is prerequisites, which have prerequisites up to the point of classes with no prerequisites
-# create visualization of planning, with major at the end and prerequisites trailing backwards towards beginning of four-year
-# PERT Charts, wikipedia (program engineering and review technique)
-
-# in order to continue, I need to add a variable to each course object to know if a course is required, elective, or final
+# we need to know if the course is a required or elective course
+# - all required courses need to be in the final calendar
+# - a certain number of elective courses need to be in the final calendar
+# - a capstone course needs to be in the final calendar
+# - a certain number of credits need to be in the final calendar
