@@ -116,6 +116,7 @@ with open("SMP/classText.txt", "w", encoding="utf-8") as f:
     for item in page_as_soup.find_all("li", "acalog-course"):
         bigString:str = ''
         # check inside the item's first <a> tag to see if the href either contains the number 657 or 658 and print the result
+        # TODO fix this thing, it needs to assign required or elective status to the course
         if item.find("a")["href"].find("657") != -1:
             print("657")
         elif item.find("a")["href"].find("658") != -1:
@@ -210,9 +211,9 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
         course_list.append(course_dict)
 
 # print the course list to the console
-for course in course_list:
-    print(course)
-    print("\n")
+# for course in course_list:
+#     print(course)
+#     print("\n")
 
 # we need to know if the course is a required or elective course
 # - all required courses need to be in the final calendar
