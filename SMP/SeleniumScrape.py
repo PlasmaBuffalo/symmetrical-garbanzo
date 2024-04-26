@@ -213,9 +213,13 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
             # then find the end of the prereqs by looking for the next period
             prereq_end = line.find(".", prereq_start)
             # then add the prereqs to the Course object after some filtering
-            course.prerequisites = line[prereq_start:prereq_end].replace("Prerequisite(s):", "").replace("or permission of the instructor", "")
+            prereq_line_string = line[prereq_start:prereq_end].replace("Prerequisite(s):", "").replace("or permission of the instructor", "").replace(";","").replace("  ", " ").replace("\n", "")
             # then remove the prereqs from the line
             line = line[:prereq_start]
+            # before moving on, we're going to split the prereqs into a list of individual courses (the four capital letters and three numbers)
+            #! debug time
+            print(prereq_line_string)
+            course.prerequisites = prereq_line_string
         # null otherwise
         else:
             course.prerequisites = ""
