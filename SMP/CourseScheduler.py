@@ -218,7 +218,7 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
             line = line[:prereq_start]
             # before moving on, we're going to split the prereqs into a list of individual courses (the four capital letters and three numbers)
             #! debug time
-            print(prereq_line_string)
+            # print(prereq_line_string)
             course.prerequisites = prereq_line_string
         # null otherwise
         else:
@@ -233,7 +233,7 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
         #! Note that this is not a perfect system: these rules do not apply to other departments
         if int(course.number) < 299:
             course.category = "Required"
-        elif int(course.number) >= 490:
+        elif int(course.number) >= 490 or "Capstone" in course.name:
             course.category = "Capstone"
         else:
             course.category = "Elective"
@@ -257,7 +257,6 @@ class DraggableCourse(Button, DragBehavior):
         self.course = course
         self.semester = None
         self.year = None
-        # self.size_hint = (100, 100) (currently breaks drag functionality)
         self.size = self.texture_size
         self.background_color = (1, 0, 0, 1)
         # make the label text appear in the center of the button
@@ -288,17 +287,51 @@ class DraggableCourse(Button, DragBehavior):
         if self._drag_touch is touch:
             self.drag_update(touch)
 
-    def check_prerequisites(self):
+    def calculate_calendar_position(self, course):
+        # calculates which semester and year a course is in to check if other courses are before it
+        if (course.semester == None) or (course.year == None):
+            return -1
+        else:
+            course_position = int(course.year.replace("Year","")) * 2
+            if course.semester == "Fall":
+                course_position -= 1
+            return course_position
+
+    def parse_prerequisites(self, prerequisites_string):
+        # parse the prerequisites string into a list of courses
+        # if the string contains "and", split on "and" and send recursive calls
+        if "and" in prerequisites_string:
+            prerequisites = prerequisites_string.split("and")
+            return self.check_prerequisites(prerequisites[0]) and self.check_prerequisites(prerequisites[1])
+        # if not, check if the string contains
+        if "or" in prerequisites_string:
+            prerequisites = prerequisites_string.split("or")
+            return self.check_prerequisites(prerequisites[0]) or self.check_prerequisites(prerequisites[1])
+        # else, we have a single course
+        else:
+            return self.check_prerequisites(prerequisites_string)
+
+    def check_prerequisites(self, course):
         # check to see if the prerequisite courses are in the calendar.
-        # works recursively to check all prerequisites of prerequisites
+        # try to find the course associated with the input string within course_object_list
+        for course in course_object_list:
+            if course.department + " " + course.number == course:
+                # if the course is in the calendar, return True
+                if course.calculate_calendar_position(course) != -1:
+                    return True
+                # if the course is not in the calendar, return False
+                else:
+                    return False
         return True
+        # get the prerequisites for the course in a tuple of department and number
+        # works recursively to check all prerequisites of prerequisites
 
     def update_course_status(self):
             # Add code to update the schedule status
             if self.year is not None and self.semester is not None:
                 # define a new method called "check_prerequisities" which will check if the course can be taken
                 # depends on what other courses are in the calendar already
-                prerequisites_met = self.check_prerequisites()
+                prerequisites_met = self.parse_prerequisites(self.course.prerequisites)
                 if prerequisites_met:
                     self.background_color = (0, 1, 0, 1)  # Change color to green
                 else:
