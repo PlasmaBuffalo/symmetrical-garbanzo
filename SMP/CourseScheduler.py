@@ -269,7 +269,8 @@ class DraggableCourse(Button, DragBehavior):
             # then reset the semester and year attributes to None
             self.semester = None
             self.year = None
-            self.update_course_status()
+            # then reset our color
+            self.background_color = (.3, .3, .3, 1)
             return True
         return super(DraggableCourse, self).on_touch_down(touch)
 
@@ -289,7 +290,7 @@ class DraggableCourse(Button, DragBehavior):
 
     def calculate_calendar_position(self, course):
         # calculates which semester and year a course is in to check if other courses are before it
-        if (course.semester == None) or (course.year == None):
+        if (course.semester == None) and (course.year == None):
             return -1
         else:
             course_position = int(course.year.replace("Year","")) * 2
@@ -322,20 +323,27 @@ class DraggableCourse(Button, DragBehavior):
                 # if the course is not in the calendar, return False
                 else:
                     return False
-        return True
         # get the prerequisites for the course in a tuple of department and number
         # works recursively to check all prerequisites of prerequisites
 
     def update_course_status(self):
-        # Add code to update the schedule status
+        # conditional to see if the course has been placed in the calendar
         if self.year is not None and self.semester is not None:
-            # define a new method called "check_prerequisities" which will check if the course can be taken
-            # depends on what other courses are in the calendar already
-            prerequisites_met = self.parse_prerequisites(self.course.prerequisites)
-            if prerequisites_met:
-                self.background_color = (0, 1, 0, 1)  # Change color to green
+            # here, we know the course is definitely in the calendar
+            # now we'll see if this course has prerequisites
+            if self.course.prerequisites != "":
+                # here, we know the course is in the calendar and has prerequisites
+                prereqs_in_calendar = True # TODO implement this function: input=prereqString, output=boolean
+                prereqs_before_course = True # TODO implement this function: input=prereqString, output=boolean
+                if prereqs_in_calendar and prereqs_before_course:
+                    # here, we know that our course's prerequisites are in the calendar properly
+                    # so we'll set it to green
+                    self.background_color = (0, 1, 0, 1)
+                    # here, we know something went wrong with prerequisites so we'll turn red
+                else: self.background_color = (1, 0, 0, 1)
             else:
-                self.background_color = (1, 0, 0, 1)  # Change color to red
+                # here, we know the course has no prerequisites and we'll be fine
+                self.background_color = (0, 1, 0, 1)
 
     def on_touch_up(self, touch):
         if self._drag_touch is touch:
@@ -346,7 +354,9 @@ class DraggableCourse(Button, DragBehavior):
                     self.semester = label_text[0]
                     self.year = label_text[1]
                     self.update_course_status()
+                    # last thing we do when dropped is evaluate our color based on prerequisites
 
+            # regardless of label instances, we'll reset how we look before ending the method
             self.opacity = 1
             self._drag_touch = None
             return True
