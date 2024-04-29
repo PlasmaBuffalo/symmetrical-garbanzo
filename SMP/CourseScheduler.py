@@ -184,7 +184,7 @@ for line in open("SMP/classText.txt", "r", encoding="utf-8"):
         line = line[8:]
 
         # add the course name to the Course object, from end of code to "Credit"
-        course.name = line[:line.find("Credit") - 1]
+        course.name = line[:line.find("Credit") - 1].replace("-","")
         # then remove the course name from the line
         line = line[line.find("Credit") - 1:]
 
@@ -258,7 +258,7 @@ class DraggableCourse(Button, DragBehavior):
         self.semester = None
         self.year = None
         self.size = self.texture_size
-        self.background_color = (1, 0, 0, 1)
+        self.background_color = (.3, .3, .3, 1)
         # make the label text appear in the center of the button
         self.halign = 'center'
         self.valign = 'center'
@@ -327,15 +327,15 @@ class DraggableCourse(Button, DragBehavior):
         # works recursively to check all prerequisites of prerequisites
 
     def update_course_status(self):
-            # Add code to update the schedule status
-            if self.year is not None and self.semester is not None:
-                # define a new method called "check_prerequisities" which will check if the course can be taken
-                # depends on what other courses are in the calendar already
-                prerequisites_met = self.parse_prerequisites(self.course.prerequisites)
-                if prerequisites_met:
-                    self.background_color = (0, 1, 0, 1)  # Change color to green
-                else:
-                    self.background_color = (1, 0, 0, 1)  # Change color to red
+        # Add code to update the schedule status
+        if self.year is not None and self.semester is not None:
+            # define a new method called "check_prerequisities" which will check if the course can be taken
+            # depends on what other courses are in the calendar already
+            prerequisites_met = self.parse_prerequisites(self.course.prerequisites)
+            if prerequisites_met:
+                self.background_color = (0, 1, 0, 1)  # Change color to green
+            else:
+                self.background_color = (1, 0, 0, 1)  # Change color to red
 
     def on_touch_up(self, touch):
         if self._drag_touch is touch:
